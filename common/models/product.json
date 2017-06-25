@@ -27,5 +27,31 @@
     }
   },
   "acls": [],
-  "methods": {}
+  "methods": {
+    "prototype.buy": {
+      "accepts": [
+        {
+          "arg": "quantity",
+          "type": "number",
+          "required": true,
+          "description": "number of products to buy"
+        }
+      ],
+      "returns": [
+        {
+          "arg": "result",
+          "type": "object",
+          "root": true,
+          "description": "The result of the purchase"
+        }
+      ],
+      "description": "Buy this product",
+      "http": [
+        {
+          "path": "/buy",
+          "verb": "post"
+        }
+      ]
+    }
+  }
 }

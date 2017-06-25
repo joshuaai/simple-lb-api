@@ -304,3 +304,67 @@ describe('Validation', function() {
   });
 });
 ```
+
+## Add Operation Hook to Loopback Model
+We will add `before_save` and `before_delete` observers/hooks to our `product.js` and `category.js` models respectively:
+```js
+Product.observe('before_save', function(ctx, next) {
+  if (ctx.instance && ctx.instance.categoryId) {
+    return Product.app.models.Category
+      .count({id: ctx.instance.categoryId})
+      .then(res => {
+        if (res < 1) {
+          return Promise
+            .reject('Error adding product to nonexisting category');
+        }
+      });
+  }
+  return next();
+});
+```
+```js
+Category.observe('before_delete', function(ctx) {
+  return Category.app.models.Product
+    .count({categoryId: ctx.where.id})
+    .then(res => {
+      if (res > 0) {
+        return Promise.reject('Error deleting category with products');
+      }
+    });
+});
+```
+Add the tests to the `product.test.js` and `category.test.js` respectively:
+```js
+describe('Hooks', function() {
+  it('should not allow adding  product to a nonexisting category', function() {
+    return Product.create({name: 'new category', price: 199, categoryId: 9999})
+      .then(res => expect(res).to.equal(null))
+      .catch(err => expect(err).to
+        .equal('Error adding product to non-existing category'));
+  });
+});
+```
+```js
+'use strict';
+
+const {app, expect} = require('../common');
+
+// Get a reference to the product model
+const Product = app.models.Product;
+const Category = app.models.Category;
+
+describe('Category', function() {
+  describe('Hooks', function() {
+    it('should not allow deleting a category with products', function() {
+      return Promise.resolve()
+        .then(() => Category.create({name: 'my category'}))
+        .then(cat => Product
+          .create({name: 'category-product', price: 299, categoryId: cat.id}))
+        .then(res => Category.destroyById(res.categoryId))
+        .then(res => expect(res).to.equal(null))
+        .catch(err => expect(err).to
+          .equal('Error deleting category with products'));
+    });
+  });
+});
+```

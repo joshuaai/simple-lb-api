@@ -1,6 +1,20 @@
 'use strict';
 
 module.exports = function(Product) {
+  Product.observe('before_save', function(ctx, next) {
+    if (ctx.instance && ctx.instance.categoryId) {
+      return Product.app.models.Category
+        .count({id: ctx.instance.categoryId})
+        .then(res => {
+          if (res < 1) {
+            return Promise
+              .reject('Error adding product to nonexisting category');
+          }
+        });
+    }
+    return next();
+  });
+
   /**
    * Buy this product
    * @param {number} quantity number of products to buy

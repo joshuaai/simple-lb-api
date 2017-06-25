@@ -33,3 +33,15 @@ To persist data memory, add to the `datasources.json` file inside the `db` objec
 ```json
 "file": "db.json"
 ```
+
+## Add Development Mode to the Project
+```bash
+npm install --save-dev nodemon
+```
+Inside the `scripts` section of our `package.json` file, we add the `dev` key:
+```json
+"dev": "nodemon server/server.js --watch common --watch server"
+```
+This will restart the Loopback server when it detects changes from watching the `common` and `server` directories.
+
+Start the server with `npm run dev`.

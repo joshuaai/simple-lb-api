@@ -5,7 +5,8 @@
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
-    "Product": 3
+    "Product": 5,
+    "Category": 3
   },
   "models": {
     "User": {},
@@ -15,7 +16,13 @@
     "Role": {},
     "Product": {
       "1": "{\"name\":\"Samsung Tab A\",\"price\":299,\"id\":1}",
-      "2": "{\"name\":\"LG G3\",\"price\":399,\"id\":2}"
+      "2": "{\"name\":\"LG G3\",\"price\":399,\"id\":2}",
+      "3": "{\"name\":\"coffee\",\"price\":5,\"categoryId\":1,\"id\":3}",
+      "4": "{\"name\":\"Lemon Cake\",\"price\":7,\"categoryId\":2,\"id\":4}"
+    },
+    "Category": {
+      "1": "{\"name\":\"drinks\",\"id\":1}",
+      "2": "{\"name\":\"food\",\"id\":2}"
     }
   }
 }

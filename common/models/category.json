@@ -1,5 +1,5 @@
 {
-  "name": "Product",
+  "name": "Category",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
@@ -9,20 +9,13 @@
     "name": {
       "type": "string",
       "required": true
-    },
-    "price": {
-      "type": "number",
-      "required": true
-    },
-    "categoryId": {
-      "type": "number"
     }
   },
   "validations": [],
   "relations": {
-    "category": {
-      "type": "belongsTo",
-      "model": "Category",
+    "products": {
+      "type": "hasMany",
+      "model": "Product",
       "foreignKey": "categoryId"
     }
   },

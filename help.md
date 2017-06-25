@@ -45,3 +45,24 @@ Inside the `scripts` section of our `package.json` file, we add the `dev` key:
 This will restart the Loopback server when it detects changes from watching the `common` and `server` directories.
 
 Start the server with `npm run dev`.
+
+## Create a Relation between Two Loopback Models
+```bash
+lb model Category
+```
+Use the same settings as in the `Product` model above. Add only a `name` property.
+
+To create the relation:
+```bash
+lb property
+```
+* Select the `Product` model.
+* Give it a property name of `categoryId` and property type of `number`.
+* Make it not required and no default value.
+
+```bash
+lb relation
+```
+On first run, select the `Category` model, `has many` attribute on `Product` model and `products` as the name of the relation (i.e. a category has many products). Add `categoryId` as the foreign key.
+
+On the second run, select the `Product` model, `belongs to` attribute `Category` model and `category` as the name for the relation (i.e. a product belongs to a category). Add `categoryId` as the foreign key. 

@@ -1,5 +1,5 @@
 'use strict';
-
+process.env.NODE_ENV = 'test';
 const {app, expect} = require('../common');
 
 // Get a reference to the product model
@@ -80,8 +80,8 @@ describe('Validation', function() {
 });
 
 describe('Hooks', function() {
-  it('should not allow adding  product to a nonexisting category', function() {
-    return Product.create({name: 'new category', price: 199, categoryId: 9999})
+  it('should not allow adding product to a nonexisting category', function() {
+    return Product.create({name: 'new products', price: 199, categoryId: 9998})
       .then(res => expect(res).to.equal(null))
       .catch(err => expect(err).to
         .equal('Error adding product to non-existing category'));

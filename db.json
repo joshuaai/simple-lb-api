@@ -5,8 +5,8 @@
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
-    "Product": 8,
-    "Category": 3
+    "Product": 16,
+    "Category": 22
   },
   "models": {
     "User": {},
@@ -21,11 +21,35 @@
       "4": "{\"name\":\"Lemon Cake\",\"price\":7,\"categoryId\":2,\"id\":4}",
       "5": "{\"name\":\"abc\",\"price\":299,\"id\":5}",
       "6": "{\"name\":\"all good\",\"price\":100,\"id\":6}",
-      "7": "{\"name\":\"all great\",\"price\":100,\"id\":7}"
+      "7": "{\"name\":\"all great\",\"price\":100,\"id\":7}",
+      "8": "{\"name\":\"test\",\"price\":100,\"id\":8}",
+      "9": "{\"name\":\"category-product\",\"price\":299,\"categoryId\":3,\"id\":9}",
+      "10": "{\"name\":\"new category\",\"price\":199,\"categoryId\":9999,\"id\":10}",
+      "11": "{\"name\":\"my-product\",\"price\":120,\"id\":11}",
+      "12": "{\"name\":\"new catgory\",\"price\":199,\"categoryId\":9999,\"id\":12}",
+      "13": "{\"name\":\"test again\",\"price\":100,\"id\":13}",
+      "14": "{\"name\":\"new product\",\"price\":199,\"categoryId\":9998,\"id\":14}",
+      "15": "{\"name\":\"holla product\",\"price\":299,\"categoryId\":21,\"id\":15}"
     },
     "Category": {
-      "1": "{\"name\":\"drinks\",\"id\":1}",
-      "2": "{\"name\":\"food\",\"id\":2}"
+      "2": "{\"name\":\"food\",\"id\":2}",
+      "4": "{\"name\":\"my category\",\"id\":4}",
+      "5": "{\"name\":\"my category\",\"id\":5}",
+      "6": "{\"name\":\"my category\",\"id\":6}",
+      "7": "{\"name\":\"my category\",\"id\":7}",
+      "8": "{\"name\":\"my-category\",\"id\":8}",
+      "9": "{\"name\":\"my category\",\"id\":9}",
+      "10": "{\"name\":\"my-category\",\"id\":10}",
+      "11": "{\"name\":\"my category\",\"id\":11}",
+      "12": "{\"name\":\"my category\",\"id\":12}",
+      "13": "{\"name\":\"my category\",\"id\":13}",
+      "14": "{\"name\":\"my category\",\"id\":14}",
+      "15": "{\"name\":\"my-category\",\"id\":15}",
+      "16": "{\"name\":\"my next category\",\"id\":16}",
+      "17": "{\"name\":\"my-category\",\"id\":17}",
+      "18": "{\"name\":\"my next category\",\"id\":18}",
+      "19": "{\"name\":\"my-category\",\"id\":19}",
+      "20": "{\"name\":\"my next category\",\"id\":20}"
     }
   }
 }

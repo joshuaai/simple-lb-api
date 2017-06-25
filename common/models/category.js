@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(Category) {
-  Category.observe('before_delete', function(ctx) {
+  Category.observe('before delete', function(ctx) {
     return Category.app.models.Product
       .count({categoryId: ctx.where.id})
       .then(res => {

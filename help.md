@@ -306,9 +306,9 @@ describe('Validation', function() {
 ```
 
 ## Add Operation Hook to Loopback Model
-We will add `before_save` and `before_delete` observers/hooks to our `product.js` and `category.js` models respectively:
+We will add `before save` and `before delete` observers/hooks to our `product.js` and `category.js` models respectively:
 ```js
-Product.observe('before_save', function(ctx, next) {
+Product.observe('before save', function(ctx, next) {
   if (ctx.instance && ctx.instance.categoryId) {
     return Product.app.models.Category
       .count({id: ctx.instance.categoryId})
@@ -323,7 +323,7 @@ Product.observe('before_save', function(ctx, next) {
 });
 ```
 ```js
-Category.observe('before_delete', function(ctx) {
+Category.observe('before delete', function(ctx) {
   return Category.app.models.Product
     .count({categoryId: ctx.where.id})
     .then(res => {
@@ -368,3 +368,48 @@ describe('Category', function() {
   });
 });
 ```
+
+## Configure ACL's to Protect the API
+```bash
+lb acl
+```
+* ? Select the model to apply the ACL entry to: Product
+* ? Select the ACL scope: All methods and properties
+* ? Select the access type: All (match all types)
+* ? Select the role Any unauthenticated user
+* ? Select the permission to apply Explicitly deny access
+
+To allow only `GET` access:
+```bash
+lb acl
+```
+* ? Select the model to apply the ACL entry to: Product
+* ? Select the ACL scope: A single method
+* ? Enter the method name find
+* ? Select the role Any unauthenticated user
+* ? Select the permission to apply Explicitly grant access
+
+To apply the same rules to the `category.json` model, copy the contents of the `acl` array in `product.json` to the corresponding `acl` array in `category.json`.
+
+To test this, add `acl.test.js`. We first install `supertest`:
+```bash
+npm install --save-dev supertest
+```
+
+We update the `test/common.js` to include:
+```js
+const supertest = require('supertest');
+
+const expect = chai.expect;
+const request = supertest(app);
+
+module.exports = {
+  app,
+  expect,
+  request,
+};
+```
+
+Inside the `acl.test.js`, we add:
+```js
+

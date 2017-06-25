@@ -169,3 +169,138 @@ Product.validateAsync('price', validateMinimalPrice, {
   message: 'Price should be higher than the minimal price in the db',
 });
 ```
+
+## Add Unit Tests to Loopback API Project
+```bash
+npm install --save-dev mocha chai
+```
+In `package.json` scripts object, replace:
+```json
+"posttest": "npm run lint && nsp check"
+```
+with:
+```json
+"test": "mocha test/**/*.test.js",
+"test:watch": "npm run test -- --watch"
+```
+The `.test.js` script runs mocha and all the files with the extension `.test.js` in the test folder.
+
+Create a new `test` directory at the project root and a `common.js` file with the contents:
+```js
+'use strict';
+// create a reference to our server
+const app = require('../server/server');
+const chai = require('chai');
+const expect = chai.expect;
+
+module.exports = {
+  app,
+  expect,
+};
+```
+
+Create the unit folder and add `product.test.js` with the contents:
+```js
+'use strict';
+
+const {app, expect} = require('../common');
+
+// Get a reference to the product model
+const Product = app.models.Product;
+
+describe('It should resolve', function() {
+  it('a Product.find', function() {
+    return Product
+      .find()
+      .then(res => console.log(res));
+  });
+});
+```
+
+To ensure the tests don't use our default database connector, we override the data source for the specific node environment, which is `test` in this case, by updating our package.json as follows:
+```json
+// for windows
+"test": "SET NODE_ENV=test & mocha test/**/*.test.js",
+// and for Linux
+"test": "NODE_ENV=test mocha test/**/*.test.js",
+```
+
+We then add a `server/datasources.test.json` file with th contents:
+```js
+{
+  "db": {
+    "name": "db",
+    "connector": "memory",
+    "file": false
+  }
+}
+```
+
+Now add proper tests to the `product.test.js` file:
+```js
+describe('Custom methods', function() {
+  it('should allow buying a product', function() {
+    const product = new Product({name: 'buy-product', price: 299});
+    return product.buy(10, function(err, res) {
+      expect(res.status).to.contain('You bought 10 product(s)');
+    });
+  });
+
+  it('should not allow buying a negative product quantity', function() {
+    const product = new Product({name: 'buy-product', price: 299});
+    return product.buy(-10, function(err, res) {
+      expect(err).to.contain('Invalid quantity -10');
+    });
+  });
+});
+
+describe('Validation', function() {
+  it('should reject a name < 3 characters', function() {
+    return Product.create({name: 'a', price: 299})
+      .then(res => Promise.reject('Product should not be created'))
+      .catch(err => {
+        expect(err.message).to
+          .contain('Name should be at least three characters');
+        expect(err.statusCode).to.be.equal(422);
+      });
+  });
+
+  it('should reject a duplicate name', function() {
+    return Promise.resolve()
+      .then(() => Product.create({name: 'abc', price: 299}))
+      .then(() => Product.create({name: 'abc', price: 299}))
+      .then(() => Promise.reject('Product should not be created'))
+      .catch(err => {
+        expect(err.message).to.contain('Details: `name` is not unique');
+        expect(err.statusCode).to.be.equal(422);
+      });
+  });
+
+  it('should reject a price < 0', function() {
+    return Product.create({name: 'lowPrice', price: -1})
+      .then(res => Promise.reject('Product should not be created'))
+      .catch(err => {
+        expect(err.message).to.contain('Price should be a positive integer');
+        expect(err.statusCode).to.be.equal(422);
+      });
+  });
+
+  it('should reject a price < 99', function() {
+    return Product.create({name: 'lowPrice', price: 98})
+      .then(res => Promise.reject('Product should not be created'))
+      .catch(err => {
+        expect(err.message).to
+          .contain('Price should be higher than the minimal price in the db');
+        expect(err.statusCode).to.be.equal(422);
+      });
+  });
+
+  it('should store a correct product', function() {
+    return Product.create({name: 'all great', price: 100})
+      .then(res => {
+        expect(res.name).to.equal('all great');
+        expect(res.price).to.be.equal(100);
+      });
+  });
+});
+```

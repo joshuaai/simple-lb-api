@@ -125,3 +125,47 @@ Product.prototype.buy = function(quantity, callback) {
   callback(null, result);
 };
 ```
+
+## Add Validation Rules to Models
+Loopback has some [validation rules for models](https://loopback.io/doc/en/lb2/Validating-model-data.html) that we can use to add validation to our API.
+
+In `product.js`, add the following validation rules:
+```js
+// Validate minimal length of the name
+Product.validatesLengthOf('name', {
+  min: 3,
+  message: {
+    min: 'Name should be at least three characters',
+  },
+});
+
+// Validate the name to be unique
+Product.validatesUniquenessOf('name');
+
+const positiveInteger = /^[0-9]*$/;
+
+const validatePositiveInteger = function(err) {
+  if (!positiveInteger.test(this.price)) {
+    err();
+  }
+};
+
+Product.validate('price', validatePositiveInteger, {
+  message: 'Price should be a positive integer',
+});
+
+function validateMinimalPrice(err, done) {
+  const price = this.price;
+  process.nextTick(() => {
+    const minimalPriceFromDb = 99;
+    if (price < minimalPriceFromDb) {
+      err();
+    }
+    done();
+  });
+}
+
+Product.validateAsync('price', validateMinimalPrice, {
+  message: 'Price should be higher than the minimal price in the db',
+});
+```

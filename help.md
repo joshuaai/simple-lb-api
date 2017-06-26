@@ -563,3 +563,24 @@ Loopback has a [Defining Data Sources](http://loopback.io//doc/en/lb3/Defining-d
 
 ## Create a Free Database on MongoDB Atlas
 After creating your cluster on Atlas, click the *connect* button in Clusters tab to get the connection string.
+
+## Filter Model Data in Loopback
+We can use filters to manipulate which data gets returned by loopback. Use *Postman* for this testing.
+
+Hit the endpoint with:
+| Key                        | Value          |
+|----------------------------|----------------|
+| filter[include]            | category       |
+|----------------------------|----------------|
+| filter[order]              | price DESC     |
+|----------------------------|----------------|
+| filter[where][price][gt]   | 200            |
+|----------------------------|----------------|
+| filter[where][name][like]  | cake           |
+|----------------------------|----------------|
+| filter[fields][name]       | true           |
+|----------------------------|----------------|
+| filter[fields][price]      | true           |
+| filter[fields][categoryId] | true           |
+| filter[limit][1]           | 1              |
+| filter[offset]             | 0              |

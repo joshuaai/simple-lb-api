@@ -568,6 +568,7 @@ After creating your cluster on Atlas, click the *connect* button in Clusters tab
 We can use filters to manipulate which data gets returned by loopback. Use *Postman* for this testing.
 
 Hit the endpoint with:
+
 | Key                        | Value          |
 |----------------------------|----------------|
 | filter[include]            | category       |

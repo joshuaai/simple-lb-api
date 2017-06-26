@@ -571,16 +571,48 @@ Hit the endpoint with:
 | Key                        | Value          |
 |----------------------------|----------------|
 | filter[include]            | category       |
-|----------------------------|----------------|
 | filter[order]              | price DESC     |
-|----------------------------|----------------|
 | filter[where][price][gt]   | 200            |
-|----------------------------|----------------|
 | filter[where][name][like]  | cake           |
-|----------------------------|----------------|
 | filter[fields][name]       | true           |
-|----------------------------|----------------|
 | filter[fields][price]      | true           |
 | filter[fields][categoryId] | true           |
 | filter[limit][1]           | 1              |
 | filter[offset]             | 0              |
+
+## Deploy Using now.sh
+```bash
+npm install -g now
+
+now --login
+
+now
+
+now secrets add mongodb-url
+"mongodb://<USERNAME>:<PASSWORD>@cluster0-shard-00-00-rndmu.mongodb.net:27017,cluster0-shard-00-01-rndmu.mongodb.net:27017,cluster0-shard-00-02-rndmu.mongodb.net:27017/<DATABASE>?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin"
+
+now -e MONGODB_URL=@mongodb-url
+``` 
+
+Inside `package.json` at the top level, add a `now` property like so:
+```json
+"now": {
+  "name": "simple-lb-api",
+  "alias": [
+    "simple-lb-api"
+  ],
+  "env": {
+    "MONGODB_URL": "@mongodb-url",
+    "NODE_ENV": "production"
+  }
+},
+```
+
+In the `scripts` section we also add:
+```json
+"now:deploy": "now",
+"now:alias": "now alias",
+"now": "npm run now:deploy & npm run now:alias"
+```
+
+Finally, run `npm run now`. The project gets deployed and we get an alias to access the api.

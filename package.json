@@ -2,6 +2,16 @@
   "name": "simple-lb-api",
   "version": "1.0.0",
   "main": "server/server.js",
+  "now": {
+    "name": "simple-lb-api",
+    "alias": [
+      "simple-lb-api"
+    ],
+    "env": {
+      "MONGODB_URL": "@mongodb-url",
+      "NODE_ENV": "production"
+    }
+  },
   "engines": {
     "node": ">=4"
   },
@@ -10,7 +20,10 @@
     "lint": "eslint .",
     "start": "node .",
     "test": "SET NODE_ENV=test & mocha test/**/*.test.js",
-    "test:watch": "npm run test -- --watch"
+    "test:watch": "npm run test -- --watch",
+    "now:deploy": "now",
+    "now:alias": "now alias",
+    "now": "npm run now:deploy & npm run now:alias"
   },
   "dependencies": {
     "compression": "^1.0.3",

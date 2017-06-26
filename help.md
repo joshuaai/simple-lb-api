@@ -516,3 +516,50 @@ module.exports = function(app, cb) {
     .asCallback(cb);
 };
 ```
+
+## Create a MongoDB DataSource in Loopback
+```bash
+touch server/datasources.local.js
+```
+We can dynamically control our data sources in this file. The contents are as follows:
+```js
+'use strict';
+
+const mongodbUrl = process.env.MONGODB_URL;
+if (mongodbUrl) {
+  console.log('Using MongoDB url:', mongodbUrl);
+  const dataSources = {
+    db: {
+      name: 'db',
+      connector: 'mongodb',
+      url: mongodbUrl,
+    },
+  };
+
+  module.exports = dataSources;
+};
+```
+
+```bash
+npm install loopback-connector-mongodb --save
+```
+
+To run this, start a MongoDB server with `mongod.exe --auth --port 27017 --dbpath /data/db` and set it up in your project like so:
+```bash
+lb datasource
+
+? Enter the datasource name: mongo1
+? Select the connector for mongo1: MongoDB (supported by StrongLoop)
+? Connection String url to override other settings (eg: mongodb://username:password@hostname:port/database):
+? host: your-mongodb-server.foo.com
+? port: 27017
+? user: demo
+? password: ****
+? database: demo
+? Install loopback-connector-mongodb@^1.4 Yes
+```
+
+Loopback has a [Defining Data Sources](http://loopback.io//doc/en/lb3/Defining-data-sources.html) documentation.
+
+## Create a Free Database on MongoDB Atlas
+After creating your cluster on Atlas, click the *connect* button in Clusters tab to get the connection string.

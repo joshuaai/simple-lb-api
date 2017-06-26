@@ -31,7 +31,9 @@
       "principalType": "ROLE",
       "principalId": "$unauthenticated",
       "permission": "ALLOW",
-      "property": ["find"]
+      "property": [
+        "find"
+      ]
     }
   ],
   "methods": {}

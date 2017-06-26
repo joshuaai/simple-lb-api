@@ -188,6 +188,7 @@ The `.test.js` script runs mocha and all the files with the extension `.test.js`
 Create a new `test` directory at the project root and a `common.js` file with the contents:
 ```js
 'use strict';
+
 // create a reference to our server
 const app = require('../server/server');
 const chai = require('chai');
@@ -202,7 +203,7 @@ module.exports = {
 Create the unit folder and add `product.test.js` with the contents:
 ```js
 'use strict';
-
+process.env.NODE_ENV = 'test';
 const {app, expect} = require('../common');
 
 // Get a reference to the product model
@@ -346,7 +347,7 @@ describe('Hooks', function() {
 ```
 ```js
 'use strict';
-
+process.env.NODE_ENV = 'test';
 const {app, expect} = require('../common');
 
 // Get a reference to the product model
@@ -412,4 +413,106 @@ module.exports = {
 
 Inside the `acl.test.js`, we add:
 ```js
+'use strict';
+process.env.NODE_ENV = 'test';
+const {app, expect, request} = require('../common');
 
+describe('ACL', function() {
+  describe('Category', function() {
+    it('should return 200 when listing Categories', function() {
+      return request
+        .get('/api/categories')
+        .expect(200);
+    });
+
+    it('should return 401 when creating Category', function() {
+      return request
+        .post('/api/categories')
+        .send({name: 'my-category'})
+        .expect(401);
+    });
+
+    it('should return 401 when updating Category', function() {
+      return request
+        .patch('/api/categories/1')
+        .send({name: 'new-name'})
+        .expect(401);
+    });
+
+    it('should return 401 when deleting Category', function() {
+      return request
+        .delete('/api/categories/1')
+        .expect(401);
+    });
+  });
+
+  describe('Product', function() {
+    it('should return 200 when listing Products', function() {
+      return request
+        .get('/api/products')
+        .expect(200);
+    });
+
+    it('should return 401 when creating Product', function() {
+      return request
+        .post('/api/products')
+        .send({name: 'my-product', price: 120})
+        .expect(401);
+    });
+
+    it('should return 401 when updating Product', function() {
+      return request
+        .patch('/api/products/1')
+        .send({name: 'new-name', price: 140})
+        .expect(401);
+    });
+
+    it('should return 401 when deleting Product', function() {
+      return request
+        .delete('/api/products/1')
+        .expect(401);
+    });
+
+    it('should return 200 when buying a product', function() {
+      return app.models.Product.create({'name': 'test again', 'price': 100})
+        .then(res => request
+          .post(`/api/products/${res.id}/buy`)
+          .send({'quantity': 100})
+          .expect(200));
+    });
+  });
+});
+```
+
+## Create a Boot Script to Run Code at the Start of API
+We will use a boot script to create or update a predefined admin user, and give that user an Access Token. That way we don't have to log in to the API each time we want to use it as an authenticated user.
+
+* Create a new user from the explorer
+* At the `users/login` endpoint, copy the auth token and set it to the top of the app.
+Now we can make requests that require authentication.
+
+To have the api create an access token on start, we add a boot script.
+```bash
+lb boot-script
+```
+
+In the generate `server/boot/create-access-token.js` file, replace the contents with:
+```js
+'use strict';
+const Promise = require('bluebird');
+
+module.exports = function(app, cb) {
+  const AccessToken = app.models.AccessToken;
+  const User = app.models.User;
+  const email = 'admin@example.com';
+  const password = 's3cr3t';
+  const accessToken = 's3cr3t';
+
+  return Promise.resolve()
+    .then(() => User.findOne({where: {email}}))
+    .then(res => (res ? res : User.create({email, password})))
+    .then(user => AccessToken.upsert({id: accessToken, userId: user.id}))
+    .then(token => console.log('Access Token:', token.id))
+    .asCallback(cb);
+};
+```

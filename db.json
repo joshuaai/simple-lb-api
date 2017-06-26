@@ -1,16 +1,21 @@
 {
   "ids": {
-    "User": 1,
-    "AccessToken": 1,
+    "User": 2,
+    "AccessToken": 3,
     "ACL": 1,
     "RoleMapping": 1,
     "Role": 1,
     "Product": 16,
-    "Category": 22
+    "Category": 25
   },
   "models": {
-    "User": {},
-    "AccessToken": {},
+    "User": {
+      "1": "{\"password\":\"$2a$10$7rquD1f4HxOIl7PopNBLuOqMx6ofaVcb.7hSdq1s0dqIDXDfUepMK\",\"email\":\"admin@example.com\",\"id\":1}"
+    },
+    "AccessToken": {
+      "VmCxyQcv9O6iVR0m5klARSSBMe7KqMHgCXYZA8Di5qA1RmYLxXb3CGyMEtHBPrK5": "{\"id\":\"VmCxyQcv9O6iVR0m5klARSSBMe7KqMHgCXYZA8Di5qA1RmYLxXb3CGyMEtHBPrK5\",\"ttl\":1209600,\"created\":\"2017-06-26T04:55:52.056Z\",\"userId\":1}",
+      "s3cr3t": "{\"id\":\"s3cr3t\",\"userId\":1}"
+    },
     "ACL": {},
     "RoleMapping": {},
     "Role": {},
@@ -49,7 +54,10 @@
       "17": "{\"name\":\"my-category\",\"id\":17}",
       "18": "{\"name\":\"my next category\",\"id\":18}",
       "19": "{\"name\":\"my-category\",\"id\":19}",
-      "20": "{\"name\":\"my next category\",\"id\":20}"
+      "20": "{\"name\":\"my next category\",\"id\":20}",
+      "22": "{\"name\":\"Teaching\",\"id\":22}",
+      "23": "{\"name\":\"Teaching always\",\"id\":23}",
+      "24": "{\"name\":\"now admin\",\"id\":24}"
     }
   }
 }
